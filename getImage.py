@@ -1,6 +1,32 @@
 # My first whack at using computer vision to analyze a frame of honeybees.
 # reference:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_thresholding/py_thresholding.html#thresholding
 #smoothing:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#filtering
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+class BeeAnalyze:
+	def __init__(self,fileName):
+		self.img = cv2.imread(fileName)
+	def crop(self):
+		pass
+	def resize(self):
+		pass
+	def smooth(self):
+		pass
+	def show(self,title='image'):
+		cv2.imshow(title,self.img)
+		cv2.waitKey(0)
+		cv2.destroyAllWindows()
+
+	def simpleThresh(self):
+		pass
+	def adaptiveThresh(self):
+		pass
+	def otsuBinary(self):
+		pass
+	def houghCircle(self):
+		pass
 
 
 def simpleThreshold(fileName):
@@ -136,4 +162,4 @@ def houghCircle(fileName):
 
 fileName = 'bees.jpg'
 # fileName = 'houghCircles2.jpg'
-houghCircle(fileName)
+# houghCircle(fileName)
