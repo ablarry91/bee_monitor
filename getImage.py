@@ -21,12 +21,23 @@ class BeeAnalyze:
 		print "New size: ",[height, width]
 
 	def smooth(self):
-		pass
+		kernel = np.ones((5,5),np.float32)/25
+		self.img = cv2.filter2D(self.img,-1,kernel)
+
 	def show(self,title='image'):
 		"""shows the image stored to this object.  Press 'q' to exit image."""
-		cv2.imshow(title,self.img)
-		cv2.waitKey(0)
-		cv2.destroyAllWindows()
+		# uncomment if you want the cv2 method
+		# cv2.imshow(title,self.img)
+		# cv2.waitKey(0)
+		# cv2.destroyAllWindows()
+
+		# I like using matplotlib as it's more graphical
+		# plt.subplot(121),
+		plt.imshow(self.img)
+		plt.title(title)
+		plt.xticks([])
+		plt.yticks([])
+		plt.show()
 
 	def simpleThresh(self):
 		pass
