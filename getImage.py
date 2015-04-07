@@ -9,8 +9,9 @@ class BeeAnalyze:
 	def __init__(self,fileName):
 		self.img = cv2.imread(fileName)
 
-	def crop(self):
-		pass
+	def crop(self,xStart,yStart,xWidth,yWidth):
+		self.img = self.img[yStart:(yStart+yWidth), xStart:(xStart+xWidth)] # Crop from x, y, w, h -> 100, 200, 300, 400
+		# NOTE: its img[y: y + h, x: x + w] and *not* img[x: x + w, y: y + h]
 
 	def resize(self,ratio):
 		height, width = self.img.shape[:2]
@@ -169,5 +170,7 @@ def houghCircle(fileName):
 	cv2.destroyAllWindows()
 
 fileName = 'bees.jpg'
+bee = BeeAnalyze(fileName)
+bee.crop(700,200,200,200)
 # fileName = 'houghCircles2.jpg'
 # houghCircle(fileNamequit)
