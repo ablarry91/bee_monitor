@@ -106,11 +106,15 @@ def houghCircle(fileName):
 	import numpy as np
 
 	img = cv2.imread(fileName,0)
+
+	height, width = img.shape[:2]
+	img = cv2.resize(img,(int(width/10), int(height/10)), interpolation = cv2.INTER_CUBIC)
+
 	img = cv2.medianBlur(img,5)
 	cimg = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
 	# circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,20, param1=50,param2=30,minRadius=0,maxRadius=0)
 	print 'test1'
-	circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, 1, 10,param1=50,param2=50,minRadius=0,maxRadius=0)
+	circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, 1, 10,param1=50,param2=20,minRadius=0,maxRadius=0)
 	print circles
 	circles = np.uint16(np.around(circles))
 	for i in circles[0,:]:
@@ -125,5 +129,5 @@ def houghCircle(fileName):
 	cv2.destroyAllWindows()
 
 fileName = 'bees.jpg'
-fileName = 'houghCircles2.jpg'
+# fileName = 'houghCircles2.jpg'
 houghCircle(fileName)
