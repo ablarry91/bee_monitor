@@ -8,13 +8,21 @@ from matplotlib import pyplot as plt
 class BeeAnalyze:
 	def __init__(self,fileName):
 		self.img = cv2.imread(fileName)
+
 	def crop(self):
 		pass
-	def resize(self):
-		pass
+
+	def resize(self,ratio):
+		height, width = self.img.shape[:2]
+		self.img = cv2.resize(self.img,(int(width*ratio), int(height*ratio)), interpolation = cv2.INTER_CUBIC)
+		print "Old size: ",[height, width]
+		height, width = self.img.shape[:2]
+		print "New size: ",[height, width]
+
 	def smooth(self):
 		pass
 	def show(self,title='image'):
+		"""shows the image stored to this object.  Press 'q' to exit image."""
 		cv2.imshow(title,self.img)
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
@@ -162,4 +170,4 @@ def houghCircle(fileName):
 
 fileName = 'bees.jpg'
 # fileName = 'houghCircles2.jpg'
-# houghCircle(fileName)
+# houghCircle(fileNamequit)
