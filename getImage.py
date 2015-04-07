@@ -2,12 +2,14 @@
 # reference:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_thresholding/py_thresholding.html#thresholding
 #smoothing:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#filtering
 import cv2
+import cv2.cv as cv
 import numpy as np
+import matplotlib
 from matplotlib import pyplot as plt
 
 class BeeAnalyze:
 	def __init__(self,fileName):
-		self.img = cv2.imread(fileName)
+		self.img = cv2.imread(fileName,0)
 
 	def crop(self,xStart,yStart,xWidth,yWidth):
 		self.img = self.img[yStart:(yStart+yWidth), xStart:(xStart+xWidth)] # Crop from x, y, w, h -> 100, 200, 300, 400
@@ -33,7 +35,7 @@ class BeeAnalyze:
 
 		# I like using matplotlib as it's more graphical
 		# plt.subplot(121),
-		plt.imshow(self.img)
+		plt.imshow(self.img,cmap = matplotlib.cm.Greys_r)
 		plt.title(title)
 		plt.xticks([])
 		plt.yticks([])
@@ -137,18 +139,8 @@ class BeeAnalyze:
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
-
-
-def houghCircle(fileName):
-
-	import cv2
-	import cv2.cv as cv
-	import numpy as np
-
-
-
 fileName = 'bees.jpg'
 bee = BeeAnalyze(fileName)
-bee.crop(700,200,200,200)
+# bee.crop(700,200,200,200)
 # fileName = 'houghCircles2.jpg'
 # houghCircle(fileNamequit)
