@@ -139,8 +139,11 @@ class BeeAnalyze:
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
+	def histogram(self):
+		plt.hist(self.img.ravel(),256,[0,256]); plt.show()
+
 fileName = 'bees.jpg'
 bee = BeeAnalyze(fileName)
-# bee.crop(700,200,200,200)
+bee.crop(700,200,200,200)
 # fileName = 'houghCircles2.jpg'
 # houghCircle(fileNamequit)
