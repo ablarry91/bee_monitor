@@ -105,25 +105,31 @@ def houghCircle(fileName):
 	import cv2.cv as cv
 	import numpy as np
 
+	# image processing stuff
 	img = cv2.imread(fileName,0)
-
-	height, width = img.shape[:2]
-	img = cv2.resize(img,(int(width/10), int(height/10)), interpolation = cv2.INTER_CUBIC)
-
 	img = cv2.medianBlur(img,5)
+	img = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+				cv2.THRESH_BINARY,11,2)
+
+	# resize if necessary
+	height, width = img.shape[:2]
+	img = cv2.resize(img,(int(width/3), int(height/3)), interpolation = cv2.INTER_CUBIC)
+
+	# img = cv2.medianBlur(img,5)
 	cimg = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
 	# circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,20, param1=50,param2=30,minRadius=0,maxRadius=0)
-	print 'test1'
-	circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, 1, 10,param1=50,param2=20,minRadius=0,maxRadius=0)
-	print circles
+	circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, 1, 2,param1=50,param2=80,minRadius=0,maxRadius=0)
+	print len(circles[0,:])," circles detected.\r\n"
 	circles = np.uint16(np.around(circles))
 	for i in circles[0,:]:
-		print i
 		# draw the outer circle
-		cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
+		# cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
 		# draw the center of the circle
-		cv2.circle(cimg,(i[0],i[1]),2,(0,0,255),3)
+		cv2.circle(cimg,(i[0],i[1]),1,(0,0,255),3)
 
+	# height, width = cimg.shape[:2]
+	# cimg = cv2.resize(cimg,(int(width*2), int(height*2)), interpolation = cv2.INTER_CUBIC)
+	print cimg.shape[:2]
 	cv2.imshow('detected circles',cimg)
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
