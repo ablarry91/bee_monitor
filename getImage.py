@@ -26,20 +26,20 @@ class BeeAnalyze:
 		kernel = np.ones((5,5),np.float32)/25
 		self.img = cv2.filter2D(self.img,-1,kernel)
 
-	def show(self,title='image'):
+	def show(self,title='image',method='plt'):
 		"""shows the image stored to this object.  Press 'q' to exit image."""
-		# uncomment if you want the cv2 method
-		# cv2.imshow(title,self.img)
-		# cv2.waitKey(0)
-		# cv2.destroyAllWindows()
+		if method == 'cv2':
+			cv2.imshow(title,self.img)
+			cv2.waitKey(0)
+			cv2.destroyAllWindows()
 
-		# I like using matplotlib as it's more graphical
-		# plt.subplot(121),
-		plt.imshow(self.img,cmap = matplotlib.cm.Greys_r)
-		plt.title(title)
-		plt.xticks([])
-		plt.yticks([])
-		plt.show()
+		elif method == 'plt':
+			# plt.subplot(121),
+			plt.imshow(self.img,cmap = matplotlib.cm.Greys_r)
+			plt.title(title)
+			plt.xticks([])
+			plt.yticks([])
+			plt.show()
 
 	def simpleThresh(self):
 		img = self.img
@@ -113,20 +113,17 @@ class BeeAnalyze:
 		"""source:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html#hough-circles"""
 		# image processing stuff
 		img = self.img
-		img = cv2.medianBlur(img,5)
-		img = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
-
-		# resize if necessary
-		height, width = img.shape[:2]
-		img = cv2.resize(img,(int(width/3), int(height/3)), interpolation = cv2.INTER_CUBIC)
-
 		# img = cv2.medianBlur(img,5)
+		# img = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+
 		cimg = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
-		# circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,20, param1=50,param2=30,minRadius=0,maxRadius=0)
-		circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, 1, 2,param1=50,param2=80,minRadius=0,maxRadius=0)
+
+		#NOTE: 'maxRadius' more than likely refers to maxDiameter, in pixels?
+		circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, .01, 20,param1=50,param2=40,minRadius=0,maxRadius=40)
 		print len(circles[0,:])," circles detected.\r\n"
 		circles = np.uint16(np.around(circles))
 		for i in circles[0,:]:
+			print i
 			# draw the outer circle
 			# cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
 			# draw the center of the circle
@@ -134,13 +131,15 @@ class BeeAnalyze:
 
 		# height, width = cimg.shape[:2]
 		# cimg = cv2.resize(cimg,(int(width*2), int(height*2)), interpolation = cv2.INTER_CUBIC)
-		print cimg.shape[:2]
 		cv2.imshow('detected circles',cimg)
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
 	def histogram(self):
 		plt.hist(self.img.ravel(),256,[0,256]); plt.show()
+
+	def cannyEdge(self):
+		self.img = cv2.Canny(self.img,100,200)
 
 fileName = 'bees.jpg'
 bee = BeeAnalyze(fileName)
