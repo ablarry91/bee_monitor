@@ -119,13 +119,13 @@ class BeeAnalyze:
 		cimg = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
 
 		#NOTE: 'maxRadius' more than likely refers to maxDiameter, in pixels?
-		circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, .01, 20,param1=50,param2=40,minRadius=0,maxRadius=40)
+		circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, .01, 20,param1=50,param2=20,minRadius=0,maxRadius=40)
 		print len(circles[0,:])," circles detected.\r\n"
 		circles = np.uint16(np.around(circles))
 		for i in circles[0,:]:
 			print i
 			# draw the outer circle
-			# cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
+			cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
 			# draw the center of the circle
 			cv2.circle(cimg,(i[0],i[1]),1,(0,0,255),3)
 
