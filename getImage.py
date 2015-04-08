@@ -109,7 +109,7 @@ class BeeAnalyze:
 			plt.title(titles[i*3+2]), plt.xticks([]), plt.yticks([])
 		plt.show()
 
-	def houghCircle(self):
+	def houghCircle(self,thresh):
 		"""source:https://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html#hough-circles"""
 		# image processing stuff
 		img = self.img
@@ -119,15 +119,22 @@ class BeeAnalyze:
 		cimg = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
 
 		#NOTE: 'maxRadius' more than likely refers to maxDiameter, in pixels?
+		print "Detecting circles..."
 		circles = cv2.HoughCircles(img,cv.CV_HOUGH_GRADIENT, .01, 20,param1=50,param2=20,minRadius=0,maxRadius=40)
-		print len(circles[0,:])," circles detected.\r\n"
+		print len(circles[0,:])," circles detected."
 		circles = np.uint16(np.around(circles))
+		count = 0
+		count2 = 0
 		for i in circles[0,:]:
-			print i
-			# draw the outer circle
-			cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
-			# draw the center of the circle
-			cv2.circle(cimg,(i[0],i[1]),1,(0,0,255),3)
+			print "Verifying candidate #",count,"\r",
+			count += 1
+			if self.drawCircle(i[0],i[1],i[2],thresh):
+				# draw the outer circle
+				cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
+				# draw the center of the circle
+				cv2.circle(cimg,(i[0],i[1]),1,(0,0,255),3)
+				count2 += 1
+		print "\n",count2," possible matches."
 
 		# height, width = cimg.shape[:2]
 		# cimg = cv2.resize(cimg,(int(width*2), int(height*2)), interpolation = cv2.INTER_CUBIC)
@@ -141,8 +148,29 @@ class BeeAnalyze:
 	def cannyEdge(self):
 		self.img = cv2.Canny(self.img,100,200)
 
+	def drawCircle(self, xCenter, yCenter, radius, meanThresh):
+		"""calculates the average value of pixels within a particular sampling region.  If they fall below a certain threshold, then return True.  Else, return false.  NOTE: IMAGE MUST BE BINARY.  Note that a pixel value of 0 is black."""
+		from math import floor
+		sampleBoxSize = 13
+		total = 0
+		for i in range(sampleBoxSize):
+			for j in range(sampleBoxSize):
+				try:
+					if self.img[yCenter-floor(sampleBoxSize/2)+j,xCenter-floor(sampleBoxSize/2)] > 127:
+						total = total + 1
+					else:
+						pass
+				except:
+					pass
+				# total = total + self.img[xCenter-floor(sampleBoxSize/2)+i,yCenter-floor(sampleBoxSize/2)]
+		if float(total)/(sampleBoxSize**2) < meanThresh:
+			return True
+		else:
+			return False
+
 fileName = 'bees.jpg'
 bee = BeeAnalyze(fileName)
-bee.crop(700,200,200,200)
+# bee.crop(700,200,200,200)
+# bee.cannyEdge()
 # fileName = 'houghCircles2.jpg'
 # houghCircle(fileNamequit)
